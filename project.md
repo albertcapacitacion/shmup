@@ -1,0 +1,625 @@
+# SHMUP Game Project - Complete Documentation
+
+## Project Overview
+
+**SHMUP** (Shoot'em Up) is a retro-style arcade shooter game built with the Phaser game development framework. It's an **RPG rogue-like retro shoot'em up** game featuring procedural background terrain generation and rich enemy shooting patterns. The game is fully playable in the browser and was created as a Phaser framework prototype and learning project.
+
+**Project Name:** firsttry  
+**Version:** 0.0.0  
+**License:** MIT (Copyright 2015 Chmood)  
+**Live Demo:** http://chmood.github.io/shmup/dist/
+
+---
+
+## Project Structure
+
+```
+shmup/
+├── bower.json                  # Bower dependency management for frontend libraries
+├── gulpfile.js               # Gulp task automation for build, minification, and deployment
+├── index.html                # Root HTML file (placeholder)
+├── LICENSE                   # MIT License file
+├── package.json             # NPM package configuration and scripts
+├── README.md                # Project README with basic information
+│
+├── src/                     # Source files directory
+│   ├── index.html          # Main HTML entry point
+│   ├── css/
+│   │   └── main.css        # Main stylesheet
+│   │
+│   ├── js/                 # JavaScript source code
+│   │   ├── boot.js         # Bootstrap configuration (CONFIG object)
+│   │   ├── game.js         # Main game logic and state management
+│   │   ├── main.js         # Entry point that initializes Phaser game
+│   │   ├── menu.js         # Main menu state
+│   │   ├── preloader.js    # Asset preloading state
+│   │   │
+│   │   └── class/          # Game object classes
+│   │       ├── actor.js           # Base actor class (extends Spriter)
+│   │       ├── bullet.js          # Player bullet class
+│   │       ├── cloud.js           # Dynamic cloud generation for background
+│   │       ├── collectible.js     # Collectible bonuses/power-ups
+│   │       ├── enemy.js           # Base enemy class (can shoot and drop loot)
+│   │       ├── flying_mobs.js     # Flying enemy variants
+│   │       ├── mob.js             # Base mobile unit class (movement/physics)
+│   │       ├── player.js          # Player character with input handling
+│   │       ├── shoot.js           # Shooting pattern scripts
+│   │       ├── spriter.js         # Base sprite wrapper class
+│   │       └── turret.js          # Stationary turret enemy type
+│   │
+│   ├── assets/             # Game assets (graphics, audio, etc.)
+│   │   ├── *.png fragments # Sprite sheets and graphics:
+│   │   │   ├── player_ship_1.png through player_ship_4.png    # 4 playable character variants
+│   │   │   ├── player_bullets.png                             # Player bullet sprites
+│   │   │   ├── mob_planes.png                                 # Flying enemy sprites
+│   │   │   ├── mob_vessel_1.png                               # Vessel enemy sprites
+│   │   │   ├── mob_flagship_1.png                             # Boss/flagship enemy sprites
+│   │   │   ├── mob_turret_1.png                               # Turret enemy sprites
+│   │   │   ├── mob_bullet_1.png, mob_bullet_2.png             # Enemy bullet sprites
+│   │   │   ├── explosion_1.png                                # Explosion animation frames
+│   │   │   ├── tileset_1.png, tileset_1_debug.png             # Terrain tileset
+│   │   │   ├── clouds.png                                     # Cloud sprites for background
+│   │   │   ├── bonuses_1.png, coins.png, cubes.png            # Collectible sprites
+│   │   │   ├── minecraftia.png, minecraftia.xml               # Retro bitmap font
+│   │   │   └── preloader.gif                                  # Loading animation
+│   │   │
+│   │   └── audio/          # Audio files and definitions
+│   │       ├── *.bfxrsound           # BFXR sound generator files (retro sound definitions)
+│   │       │   ├── collect.bfxrsound
+│   │       │   ├── explosion.bfxrsound
+│   │       │   └── shoot_player.bfxrsound
+│   │       │
+│   │       ├── *.wav                 # Pre-generated WAV audio files
+│   │       │   ├── collect_*.wav (x4 variants for variety)
+│   │       │   ├── explosion_*.wav (x4 variants)
+│   │       │   ├── shoot_player_*.wav (x5 variants)
+│   │       │   ├── die_*.wav, hurt_*.wav, shoot_*.wav
+│   │       │   └── sonar.wav
+│   │       │
+│   │       └── mod/                  # Mod music files
+│   │           ├── 2ND_PM.S3M
+│   │           ├── 4-track_from_heaven.mod
+│   │           └── the_butano_odyssey.xm
+│   │
+│   └── bower_components/   # Third-party libraries (installed by Bower)
+│       └── phaser-official/
+│           └── build/
+│               ├── phaser.js, phaser.min.js              # Full and minified Phaser library
+│               └── custom/                               # Custom Phaser builds
+│                   ├── Various custom physics builds (ninja, arcade, p2)
+│                   └── PIXI.js library files
+│
+└── dist/                   # Build output directory (generated by Gulp)
+    ├── index.html         # Minified HTML
+    ├── main.min.js        # Concatenated and minified JavaScript
+    ├── main.min.css       # Minified CSS
+    └── assets/            # Copied asset files
+```
+
+---
+
+## Languages and Technologies
+
+### Programming Languages
+- **JavaScript (ES5)** - Game logic, class definitions, and Phaser API integration
+- **HTML5** - Markup structure
+- **CSS3** - Styling with canvas display isolation
+
+### Game Engine
+- **Phaser** (Arcade Physics) - Full-featured HTML5 2D game framework
+  - Version: Latest (from bower)
+  - Used for: Sprite management, physics, input handling, audio, animations, camera control, state management
+
+### Build and Development Tools
+- **Gulp** - Task automation (v3 era syntax, based on gulpfile structure)
+  - Tasks: Clean, copy assets, uglify/minify JS, minify CSS, process HTML, watch for changes, local development server
+- **Bower** - Frontend package manager for dependencies
+- **JSHint** - JavaScript linting
+- **Node.js** - JavaScript runtime for build tools and task execution
+
+---
+
+## Dependencies
+
+### Runtime Dependencies
+- **phaser-official** (Bower) - Latest stable Phaser version
+  - Provides: 2D rendering, physics engine, input handling, state management, sprite system, animation system
+
+### Development Dependencies (npm)
+- `bower` - Frontend package manager
+- `gulp` - Task automation
+- `gulp-util` - Gulp utilities
+- `gulp-clean` - File/directory deletion
+- `gulp-concat` - File concatenation
+- `gulp-sourcemaps` - Source maps for debugging minified code
+- `gulp-download` - File downloading
+- `gulp-rename` - File renaming
+- `gulp-minify-css` - CSS minification
+- `gulp-minify-html` - HTML minification
+- `gulp-processhtml` - HTML preprocessing for build directives
+- `gulp-jshint` - JavaScript linting
+- `gulp-uglify` - JavaScript minification
+- `gulp-connect` - Local development web server with live reload
+- `gulp-watch` - File system monitoring
+- `tiny-lr` - LiveReload protocol implementation
+
+---
+
+## Build System
+
+### Gulp Tasks
+
+**Development Mode:**
+```bash
+npm start
+# or
+gulp
+```
+- Starts local web server on port 9000
+- Enables live reload on file changes
+- Watches JavaScript files for linting
+- Watches CSS and HTML for live reload
+- Serves from `src/` directory
+
+**Build for Production:**
+```bash
+npm run build
+# or
+gulp build
+```
+Executes in sequence:
+1. `copy` - Copies all assets from `src/assets/` to `dist/assets/`
+2. `uglify` - Concatenates all JS files (in specific order) and minifies to `dist/main.min.js`
+3. `minifycss` - Minifies CSS to `dist/main.min.css`
+4. `processhtml` - Processes `src/index.html` removing build directives to `dist/index.html`
+5. `minifyhtml` - Minifies the HTML file
+
+**Linting:**
+```bash
+npm run lint
+# or
+gulp lint
+```
+Runs JSHint on all JavaScript files with `.jshintrc` configuration
+
+### JavaScript Concatenation Order (Critical)
+The build process concatenates JavaScript files in a specific order to ensure proper dependency resolution:
+1. Phaser library: `phaser.min.js`
+2. Initialization: `boot.js`, `preloader.js`, `menu.js`
+3. Classes (inheritance order): `spriter.js`, `actor.js`, `mob.js`, `shoot.js`, `enemy.js`, `flying_mobs.js`, `turret.js`, `player.js`, `bullet.js`, `collectible.js`, `cloud.js`
+4. Game logic: `game.js`, `main.js`
+
+---
+
+## Game Architecture
+
+### State Management System
+
+The game uses Phaser's **state-based architecture** with four distinct states:
+
+#### 1. **Boot State** (`boot.js`)
+- **Purpose:** Configuration initialization
+- **Responsibilities:**
+  - Defines the global `CONFIG` object with all game parameters
+  - Sets up player class statistics (4 character variants: Viper, Cobra, Anaconda, Boa)
+  - Configures resource pools (mobs, bullets, bonuses, clouds)
+  - Sets scroll speed, acceleration, and world dimensions
+  - Defines debug flags
+- **Characteristics:** Runs once at startup
+- **No visual output**
+
+#### 2. **Preloader State** (`preloader.js`)
+- **Purpose:** Asset loading
+- **Responsibilities:**
+  - Displays loading progress bar
+  - Loads all game graphics (sprite sheets, images, tilesets)
+  - Loads audio assets (sound effects and music files)
+  - Sets up animation sprite sheets
+- **Transitions to:** Menu state when complete
+- **Visual output:** Loading bar animation
+
+#### 3. **Menu State** (`menu.js`)
+- **Purpose:** Main menu interface
+- **Responsibilities:**
+  - Displays game title ("PHASER SHMUP")
+  - Shows controls information (W to shoot, Arrows to move)
+  - Listens for user input to start game
+- **Transitions to:** Game state on user input
+- **Visual output:** Bitmap text interface
+
+#### 4. **Game State** (`game.js`)
+- **Purpose:** Main gameplay loop
+- **Responsibilities:**
+  - Manages all active game entities
+  - Handles player input and updates
+  - Manages enemy spawning and AI
+  - Handles collision detection
+  - Manages camera following player
+  - Tracks score and game progression
+  - Manages sound effects
+- **Transitions to:** N/A (gameplay continues until player death)
+- **Visual output:** Full game rendering
+
+### Game States Within Gameplay
+
+The Game state maintains an internal state machine:
+- **Preplay** (0) - No enemies spawning, setup phase
+- **Play** (1) - Active gameplay with enemies
+- **Postplay** (2) - Player is dead, game over
+
+---
+
+## Game Classes Hierarchy
+
+### Class Inheritance Tree
+
+```
+Phaser.Sprite (Phaser framework)
+    │
+    └── Spriter (spriter.js)
+         │ Base sprite wrapper with common properties
+         │
+         ├── Actor (actor.js)
+         │   │ Adds ground pinning and angle calculation
+         │   │
+         │   └── Mob (mob.js)
+         │        │ Adds movement, physics, health, damage
+         │        │
+         │        └── Enemy (enemy.js)
+         │            │ Adds shooting, AI, loot drops
+         │            │
+         │            ├── FlyingMobs (flying_mobs.js) - Flying enemy variants
+         │            └── Turret (turret.js) - Stationary turret type
+         │
+         └── Player (player.js)
+             │ Character controlled by user input
+             │ Can shoot, take damage, move with inertia
+             │
+    │
+    ├── Bullet (bullet.js)
+    │   │ Projectiles fired by player
+    │   │
+    ├── Collectible (collectible.js)
+    │   │ Bonuses dropped by defeated enemies
+    │   │
+    └── Cloud (cloud.js)
+        │ Procedural background clouds
+
+Additional Classes:
+- Shoot (shoot.js) - Defines shooting patterns and behavior
+- Config object in boot.js - Game-wide configuration
+```
+
+### Core Classes Description
+
+**Spriter** - Base sprite class extending Phaser.Sprite
+- Wraps Phaser sprite functionality
+- Base for all game objects
+
+**Actor** - Game entity with directional intelligence
+- Extends Spriter
+- Can calculate angle to other sprites
+- Can be pinned to ground
+
+**Mob** - Mobile game unit
+- Extends Actor
+- Has health, speed, acceleration
+- Physics-based movement
+- Can take damage and die
+
+**Enemy** - Intelligent adversary
+- Extends Mob
+- Implements AI movement patterns
+- Shoots projectiles (configurable patterns)
+- Drops loot bonuses when defeated
+- Has points/score value
+
+**FlyingMobs** - Flying enemy variants
+- Extends Enemy
+- Different movement patterns than ground enemies
+
+**Turret** - Stationary gun emplacement
+- Extends Enemy
+- Doesn't move, only shoots
+
+**Player** - Avatar controlled by user
+- Extends Mob
+- Takes keyboard/touch input (A/D or Arrows for movement, W to shoot)
+- Has inertia-based movement
+- Can select from 4 character classes with different stats
+- Manages personal bullet pool
+- Camera follows player
+
+**Bullet** - Projectile
+- Extends Spriter (no physics)
+- Can be player or enemy type
+- Pooled for performance
+
+**Collectible** - Bonus items
+- Extends Spriter
+- Dropped by enemies
+- Increases score when collected
+
+**Cloud** - Background detail
+- Extends Spriter
+- Procedurally generated
+- Scrolls with parallax effect
+
+**Shoot** - Shooting pattern system
+- Configurable bullet patterns
+- AI-driven shooting behaviors
+
+---
+
+## Player Character Classes
+
+The game features 4 distinct playable characters, each with unique stats:
+
+### Class Statistics (from CONFIG.CLASS_STATS)
+
+| Class | Health | Speed | Accel | Strength | Rate | Style |
+|-------|--------|-------|-------|----------|------|-------|
+| **Viper** | 100 | 140 | 8 | 100 | 8 | Balanced |
+| **Cobra** | 80 | 160 | 9 | 80 | 7 | Speed-focused, rapid fire |
+| **Anaconda** | 100 | 140 | 7 | 100 | 6 | Balanced, slower fire |
+| **Boa** | 140 | 100 | 5 | 150 | 4 | Tank, slow movement, powerful |
+
+- **Health** - Hit points before destruction
+- **Speed** - Maximum velocity
+- **Accel** - Acceleration rate (controls responsiveness)
+- **Strength** - Bullet damage
+- **Rate** - Fire rate (lower = faster firing)
+
+Character selection is **random** on each playthrough.
+
+---
+
+## Configuration System
+
+### Core Configuration (boot.js - CONFIG object)
+
+```javascript
+GAME_WIDTH: 320              // Canvas width in pixels
+GAME_HEIGHT: 400             // Canvas height in pixels
+PIXEL_RATIO: 2               // Pixel scaling factor
+
+WORLD_WIDTH: 16              // Game world width (tiles)
+WORLD_HEIGHT: 150            // Game world height (tiles)
+WORLD_SWAP_HEIGHT: 8         // Height threshold for terrain swapping
+
+// Object Pools (max concurrent instances)
+MOBPOOL_SIZE: 25             // Maximum active enemies
+BULLETPOOL_SIZE: 100         // Maximum player bullets
+BULLETPOOL_SIZE_ENNEMY: 100  // Maximum enemy bullets
+BONUSPOOL_SIZE: 20           // Maximum active bonuses
+CLOUDPOOL_SIZE: 10           // Maximum active clouds
+
+// Gameplay Parameters
+SCROLL_SPEED: 40             // Camera scroll speed (px/frame)
+SCROLL_ACCEL: 15             // Scroll acceleration
+BLINK_DAMAGE_TIME: 8         // Damage flash duration (frames)
+CLOUD_WIND_SPEED: 20         // Cloud drift speed
+
+AUDIO_LEVEL: 0.5             // Master audio volume (0.0-1.0)
+
+// Debug Options
+DEBUG.bottomInfos: true      // Show bottom UI info
+DEBUG.tileset: false         // Show tileset debug view
+```
+
+---
+
+## Asset Management
+
+### Sprite Sheets
+- **Player Ships** - 24×28 pixels, 5 frames each (left, left-full, idle, right, right-full) - 4 variants
+- **Player Bullets** - 16×16 pixels, multiple frames
+- **Enemy Planes** - 32×32 pixels
+- **Enemy Vessels** - 37×28 pixels
+- **Enemy Flagship** - 93×80 pixels (large boss-type enemy)
+- **Enemy Turrets** - 24×28 pixels
+- **Explosions** - 32×32 pixels, animated
+- **Clouds** - 96×168 pixels for parallax background
+- **Collectibles** - Various cubes, coins, bonuses
+
+### Font Assets
+- **Minecraftia** - Bitmap font (XML definition + PNG) for retro pixel-art styling
+
+### Audio System
+**Sound Effects:**
+- Collect sounds (4 variants for picking up bonuses)
+- Explosion sounds (4 variants for enemy deaths)
+- Player shoot sounds (5 variants for weapon feedback)
+- Damage/hurt sounds
+- Enemy shoot sounds
+- Sonar sound effect
+
+**Audio Generation:**
+- Original sounds created with BFXR (retro sound generator)
+- BFXR source files included (.bfxrsound files) for easy modification
+- WAV files generated from BFXR for cross-browser compatibility
+
+**Music:**
+- MOD and XM tracker format music files for background music
+- 3 track modules for ambient gameplay soundtrack
+
+### Tileset
+- **tileset_1.png** - Main terrain graphics
+- **tileset_1_debug.png** - Debug version with grid overlay (for development)
+
+---
+
+## Gameplay Features and Systems
+
+### Core Features (from README)
+1. **Procedural Background Terrain** - Infinite scrolling terrain generated algorithmically
+2. **Rich Enemy Shoot Patterns** - Various enemy types with different attack patterns
+3. **Multiple Player Classes** - 4 distinct characters with unique stats
+4. **Collectible Bonuses** - Defeated enemies drop loot
+
+### Implemented Features
+- Player movement with inertia (smooth, physics-based)
+- Multiple player class selection
+- Enemy AI movement and shooting
+- Bullet collision detection
+- Score tracking
+- Object pooling for performance
+- Camera following player
+- Parallax scrolling (clouds)
+- Bitmap text UI
+- Sound effects system
+
+### TODO Features (Not Yet Implemented)
+- Rich player shoot patterns (multiple streams, lateral pods, auto-aiming, homing missiles)
+- Better flying enemy spawn patterns
+- Proportional upgrades (progression system)
+
+---
+
+## Known Issues and Bugs
+
+### Critical Issues
+1. **Massive Enemy Shoot Salvos** - Large bursts of enemy projectiles may appear capped (suspected object pool limitation causing bullet queue overflow)
+
+2. **Endless Scroll Seamless Loop** - Terrain scrolling has issues:
+   - Offset bugs causing visible terrain discontinuities
+   - Tileable/infinite terrain not properly seamless
+   - Visible seams when procedural terrain wraps
+
+3. **Terrain Smoothing Bias** - Generated terrain has uneven smoothing:
+   - Particularly biased on the X-axis
+   - Creates unnatural terrain patterns
+   - Affects procedural generation quality
+
+### Performance Considerations
+- Object pooling system is critical for smooth 60 FPS gameplay
+- Pool sizes defined in CONFIG determine max simultaneous entities
+- Large coordinated enemy attacks may hit pool limits
+
+---
+
+## Controls and User Interface
+
+### Keyboard Controls
+- **Arrow Keys** - Move player left/right (up/down would move in world)
+- **W Key** - Shoot/Start game from menu
+- **Mouse/Touch** - Also supported (onInputDown event)
+
+### UI Elements
+- **Menu Screen** - Title, instructions, controls information
+- **Gameplay HUD** - Bottom info display (toggleable debug)
+- **Bitmap Font** - Retro Minecraft-style text rendering
+
+---
+
+## Development Workflow
+
+### Getting Started
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   # Automatically runs: bower install
+   ```
+
+2. **Development Mode**
+   ```bash
+   npm start
+   ```
+   - Starts web server on http://localhost:9000
+   - Live reload enabled
+   - Watch file system for changes
+   - Lint JavaScript on save
+
+3. **Building for Production**
+   ```bash
+   npm run build
+   ```
+   - Creates optimized `dist/` folder
+   - Minified and concatenated JavaScript
+   - Minified CSS and HTML
+   - All assets copied
+   - Ready for deployment
+
+4. **Linting**
+   ```bash
+   npm run lint
+   ```
+   - Checks JavaScript code quality with JSHint
+
+### File Organization When Making Changes
+
+**To Modify Game Logic:**
+- Edit files in `src/js/`
+- Changes auto-reload in dev mode
+- Ensure proper class inheritance order for builds
+
+**To Add Assets:**
+- Place in `src/assets/` (graphics in root, audio in audio/ subfolder)
+- Reference in `preloader.js`
+- Assets auto-copied during build
+
+**To Modify Gameplay Parameters:**
+- Edit `CONFIG` object in `src/js/boot.js`
+- No other changes needed
+- Config loads before game state
+
+**To Add New Classes:**
+- Create in `src/js/class/`
+- Update `src/index.html` script loading order
+- Update `gulpfile.js` uglify task concatenation order (critical!)
+- Ensure dependencies are loaded in right sequence
+
+---
+
+## Project Metadata
+
+- **Original Creator:** Chmood (2015)
+- **License:** MIT
+- **Framework Version:** Phaser (latest from 2015 era)
+- **Target Platform:** Web browsers (HTML5 Canvas)
+- **Game Genre:** Arcade Shoot'em Up (Bullet Hell variants)
+- **Visual Style:** Retro pixel art (Tyrian-inspired)
+- **Audio Style:** Chiptune/retro 8-bit sounds and tracker music
+- **Project Maturity:** Prototype/early development (v0.0.0)
+- **Code Style:** ES5 JavaScript with Phaser API
+
+---
+
+## Credits and Attribution
+
+- **Graphics:** Inspired by Open Tyrian (sprites and tilemaps used for rapid prototyping)
+- **Sound Effects:** Generated with BFXR (retro sound synthesizer)
+- **Game Framework:** Phaser.io
+- **Font:** Minecraftia bitmap font
+- **Music:** Tracker format modules (MOD/XM)
+
+---
+
+## Performance Optimization Details
+
+### Object Pooling System
+Objects are pre-allocated and recycled rather than created/destroyed:
+- **Mob Pool:** 25 re-usable enemy containers
+- **Player Bullets:** 100 re-usable bullet objects
+- **Enemy Bullets:** 100 re-usable bullet objects
+- **Bonuses:** 20 re-usable collectible objects
+- **Clouds:** 10 re-usable cloud objects
+
+This prevents garbage collection pauses during intense gameplay.
+
+### Build Optimization
+- JavaScript concatenation reduces HTTP requests
+- Minification reduces file size
+- Source maps maintained for development debugging
+- CSS minification removes unused styles
+- HTML minification removes whitespace
+
+### Memory Management
+- Inactive entities set to `exists = false` (keeps object, removes from rendering)
+- Inactive entities set to `alive = false` (disables logic updates)
+- Pooled objects reused rather than garbage collected
+
+---
+
+This documentation provides a complete overview of the SHMUP project structure, architecture, technologies, and systems. It should serve as a comprehensive reference for understanding and modifying any aspect of the game.
